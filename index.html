@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ذكرى حبنا الجميلة</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a0535, #2b1055, #3d1f7a);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ===== قلوب الخلفية ===== */
+        .hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            bottom: -10px;
+            font-size: 20px;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== شاشة القفل ===== */
+        #lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(160deg, #0f0221, #1e0845, #2b1060);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease;
+        }
+
+        .lock-box {
+            background: rgba(255, 255, 255, 0.07);
+            padding: 35px 25px;
+            border-radius: 24px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 88%;
+            max-width: 380px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .lock-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff477e;
+            margin-bottom: 18px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .lock-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .lock-subtitle {
+            font-size: 14px;
+            opacity: 0.75;
+            margin-bottom: 22px;
+        }
+
+        .password-field {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 14px 18px;
+            width: 100%;
+            font-size: 16px;
+            color: white;
+            text-align: center;
+            outline: none;
+            margin-bottom: 14px;
+            font-family: 'Cairo', sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .password-field::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0;
+        }
+
+        .password-field:focus {
+            border-color: #ff477e;
+        }
+
+        .unlock-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .unlock-btn:hover {
+            background: rgba(255, 71, 126, 0.3);
+            border-color: #ff477e;
+        }
+
+        .error-msg {
+            color: #ff4757;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ===== المحتوى الرئيسي ===== */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Section 1: Hero ===== */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 50px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: brightness(0.5);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(27, 5, 58, 0.95) 0%, transparent 60%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .love-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 16px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(5px);
+        }
+
+        .hero-name {
+            font-size: 52px;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(255, 71, 126, 0.5);
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* ===== Section 2: العداد ===== */
+        .counter-section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .section-label {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 8px 22px;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .event-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .counter-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 25px;
+        }
+
+        .counter-subtitle {
+            font-size: 14px;
+            opacity: 0.65;
+            margin-bottom: 20px;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .timer-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 220px;
+            margin: 0 auto;
+        }
+
+        .timer-box {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timer-box span {
+            display: block;
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+        }
+
+        .timer-box label {
+            font-size: 12px;
+            opacity: 0.65;
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* ===== Section 3: Feelings ===== */
+        .feelings-section {
+            padding: 10px 20px 30px;
+            text-align: center;
+        }
+
+        .feelings-title {
+            font-size: 18px;
+            margin-bottom: 16px;
+            opacity: 0.85;
+        }
+
+        .feeling-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            margin-bottom: 12px;
+            cursor: default;
+        }
+
+        .feeling-icon {
+            font-size: 20px;
+        }
+
+        /* ===== Section 4: الكروت ===== */
+        .cards-section {
+            padding: 10px 20px 30px;
+        }
+
+        .cards-title {
+            font-size: 22px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 30px 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-height: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            background: rgba(255, 71, 126, 0.15);
+        }
+
+        .card.revealed {
+            background: rgba(255, 71, 126, 0.2);
+            border-color: rgba(255, 71, 126, 0.4);
+        }
+
+        .card-heart-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            margin-bottom: 14px;
+        }
+
+        .card-label {
+            font-size: 13px;
+            opacity: 0.6;
+        }
+
+        .card-text {
+            display: none;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        /* ===== Section 5: صورة + رسالة ===== */
+        .photo-section {
+            padding: 20px 20px 0;
+            text-align: center;
+        }
+
+        .photo-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .photo-frame {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-caption {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        /* ===== زرار الرسالة ===== */
+        .letter-btn-wrap {
+            padding: 0 20px 20px;
+            text-align: center;
+        }
+
+        .letter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 14px 28px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+        }
+
+        .letter-btn:hover {
+            background: rgba(255, 71, 126, 0.2);
+            border-color: #ff477e;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            opacity: 0.35;
+            font-size: 13px;
+            padding-bottom: 40px;
+        }
+
+        /* ===== Modal الرسالة ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(160deg, #1e0845, #2b1060);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 380px;
+            overflow: hidden;
+            border: 1.5px solid rgba(255, 71, 126, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            border: none;
+            color: white;
+        }
+
+        .modal-envelope {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 71, 126, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 10px;
+        }
+
+        .modal-body {
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        .modal-recipient {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .modal-text {
+            font-size: 18px;
+            line-height: 1.9;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .modal-close-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: 0.3s;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(255, 71, 126, 0.2);
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 71, 126, 0.4);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="hearts-bg" id="heartsContainer"></div>
+
+    <!-- ===== شاشة القفل ===== -->
+    <div id="lock-screen">
+        <div class="lock-box">
+            <img class="lock-avatar" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=200"
+                alt="صورتنا">
+            <div class="lock-title">جاهزة 🤔</div>
+            <div class="lock-subtitle">كل الي هنا هيفضل بيني وبينك طول العمر ❤️</div>
+            <input type="password" class="password-field" id="passwordInput" placeholder="الباسورد | l o v e">
+            <button class="unlock-btn" onclick="checkPassword()">يلا بسرعة افتحي ❤️😂</button>
+            <div class="error-msg" id="errorMsg">كلمة المرور خاطئة، حاولي مجدداً! 😉</div>
+        </div>
+    </div>
+
+    <!-- ===== المحتوى الرئيسي ===== -->
+    <div id="main-content">
+
+        <!-- Section 1: Hero -->
+        <section class="hero-section">
+            <img class="hero-bg"
+                src="https://www.image2url.com/r2/default/images/1781386565355-c76bf26e-56c4-4b64-94c2-45510f348405.jpeg"
+                alt="صورتنا">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <div class="love-badge">✨ ❤️ بحبك ❤️</div>
+                <div class="hero-name">Ashrokty</div>
+                <div class="hero-subtitle">يوم أول مكالمة لينا كان يوم ولادتي ❤️</div>
+            </div>
+        </section>
+
+        <!-- Section 2: العداد -->
+        <section class="counter-section">
+            <div class="section-label">❤️ أول مرة شوفتك بعد ما وافقتي</div>
+            <br>
+            <div class="event-date-badge">📅 2024-11-23</div>
+            <div class="counter-title">❤️ بداية عمري معاكي</div>
+            <div class="counter-subtitle">🕐 ❤️ هيفضل شغال طول ما احنا مع بعض</div>
+
+            <div class="timer-grid">
+                <div class="timer-box"><span id="years">0</span><label>سنة</label></div>
+                <div class="timer-box"><span id="months">0</span><label>شهر</label></div>
+                <div class="timer-box"><span id="days">0</span><label>يوم</label></div>
+                <div class="timer-box"><span id="hours">0</span><label>ساعة</label></div>
+            </div>
+            <br>
+            <div class="timer-grid-2">
+                <div class="timer-box"><span id="minutes">0</span><label>دقيقة</label></div>
+                <div class="timer-box"><span id="seconds">0</span><label>ثانية</label></div>
+            </div>
+        </section>
+
+        <!-- Section 3: المشاعر -->
+        <section class="feelings-section">
+            <div class="feelings-title">😂 اقفي هنا شوية متجريش</div>
+            <div class="feeling-btn">
+                <span class="feeling-icon">🤍</span> بحبك <span class="feeling-icon">🤍</span>
+            </div>
+            <div class="feeling-btn">
+                <span class="feeling-icon">✨</span> بموت فيكي <span class="feeling-icon">✨</span>
+            </div>
+            <div class="feeling-btn">
+                <span class="feeling-icon">🔒</span> بعشقك <span class="feeling-icon">🔒</span>
+            </div>
+        </section>
+
+        <!-- Section 4: الكروت -->
+        <section class="cards-section">
+            <div class="cards-title">دوسي على الكروت 😉❤️</div>
+            <div class="cards-grid">
+                <div class="card" onclick="revealCard(this, 'محبتش')">
+                    <div class="card-heart-icon">🤍</div>
+                    <div class="card-label">أول كارت اهوووو 🥹😂</div>
+                    <div class="card-text">محبتش</div>
+                </div>
+                <div class="card" onclick="revealCard(this, 'ولا بحب')">
+                    <div class="card-heart-icon">🤍</div>
+                    <div class="card-label">التاني</div>
+                    <div class="card-text">ولا بحب</div>
+                </div>
+                <div class="card" onclick="revealCard(this, 'ولا هحب حد')">
+                    <div class="card-heart-icon">🤍</div>
+                    <div class="card-label">التالت</div>
+                    <div class="card-text">ولا هحب حد</div>
+                </div>
+                <div class="card" onclick="revealCard(this, 'زي ما حبيتك يا أجمل حاجة ف حياتي ❤️')">
+                    <div class="card-heart-icon">🤍</div>
+                    <div class="card-label">الرابع</div>
+                    <div class="card-text">زي ما حبيتك يا أجمل حاجة ف حياتي ❤️</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: الصورة -->
+        <section class="photo-section">
+            <div class="photo-title">حياتي بختصار هنا 👇</div>
+            <div class="photo-frame">
+                <img src="https://www.image2url.com/r2/default/images/1781387555875-9c55592f-377e-4787-b655-0eafe0835db5.jpeg"
+                    alt="صورتنا">
+            </div>
+            <div class="photo-caption">بحبك يا نورعيني ❤️</div>
+        </section>
+        <section class="photo-section">
+            <div class="photo-frame">
+                <img src="https://www.image2url.com/r2/default/images/1781387630981-049cb483-9c71-4000-a68e-ea5fcbbf3a2b.jpeg"
+                    alt="صورتنا">
+            </div>
+            <div class="photo-caption">بحبك يا نورعيني ❤️</div>
+        </section>
+        <section class="photo-section">
+            <div class="photo-frame">
+                <img src="https://www.image2url.com/r2/default/images/1781387853685-b6c7df21-4fa0-4216-a52b-ff0a97b5219d.jpeg"
+                    alt="صورتنا">
+            </div>
+            <div class="photo-caption">بحبك يا نورعيني ❤️</div>
+        </section>
+
+        <!-- زرار الرسالة -->
+        <div class="letter-btn-wrap">
+            <button class="letter-btn" onclick="toggleModal(true)">
+                🔒 لسه مخلصتش دوسي هنا ❤️😂🥹
+            </button>
+        </div>
+
+    </div>
+
+    <!-- ===== Modal الرسالة ===== -->
+    <div class="modal" id="letterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="toggleModal(false)">✕</button>
+                <div class="modal-envelope">📩</div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-recipient">Ashrokty</div>
+                <div class="modal-text">
+                    ربنا يخليكي ليا ومايحرمنيش منك ابداً يا روح قلبي ويارب العمر كله مع بعض ❤️
+                </div>
+                <button class="modal-close-btn" onclick="toggleModal(false)">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.image2url.com/r2/default/files/1781386201853-2d1fba86-0af6-4cdc-a210-0a2035647ad7.mp3"
+            type="audio/mpeg">
+    </audio>
+
+    <script>
+        const startDate = new Date(2024, 11, 23, 0, 0, 0);
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const lockScreen = document.getElementById('lock-screen');
+            const mainContent = document.getElementById('main-content');
+            const audio = document.getElementById('bgMusic');
+
+            if (input.toLowerCase() === 'love') {
+                lockScreen.style.opacity = '0';
+                setTimeout(() => {
+                    lockScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    setTimeout(() => mainContent.style.opacity = '1', 50);
+                    audio.play().catch(() => { });
+                }, 500);
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        document.getElementById('passwordInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        function updateTimer() {
+            const now = new Date();
+            let diff = now - startDate;
+            let totalSeconds = Math.floor(diff / 1000);
+            let totalMinutes = Math.floor(totalSeconds / 60);
+            let totalHours = Math.floor(totalMinutes / 60);
+            let totalDays = Math.floor(totalHours / 24);
+
+            let years = Math.floor(totalDays / 365);
+            let remainingDays = totalDays % 365;
+            let months = Math.floor(remainingDays / 30);
+            remainingDays = remainingDays % 30;
+
+            document.getElementById('years').innerText = years;
+            document.getElementById('months').innerText = months;
+            document.getElementById('days').innerText = remainingDays;
+            document.getElementById('hours').innerText = totalHours % 24;
+            document.getElementById('minutes').innerText = totalMinutes % 60;
+            document.getElementById('seconds').innerText = totalSeconds % 60;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function revealCard(card, text) {
+            if (card.classList.contains('revealed')) return;
+            card.classList.add('revealed');
+            card.querySelector('.card-heart-icon').style.display = 'none';
+            card.querySelector('.card-label').style.display = 'none';
+            card.querySelector('.card-text').style.display = 'block';
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('letterModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function createHeart() {
+            const container = document.getElementById('heartsContainer');
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = ['❤️', '🩷', '💕', '💗'][Math.floor(Math.random() * 4)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            heart.style.fontSize = (Math.random() * 14 + 12) + 'px';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 8000);
+        }
+        setInterval(createHeart, 400);
+    </script>
+</body>
+
+</html>
